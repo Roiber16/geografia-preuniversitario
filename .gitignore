@@ -1,0 +1,28 @@
+# Dependencias de Node (se instalan con `npm ci` en GitHub Actions)
+# OJO: package-lock.json NO se ignora, tiene que estar en el repo para que `npm ci` funcione.
+node_modules/
+
+# Archivos generados por Gradle / Android Studio (se regeneran al compilar)
+android/.gradle/
+android/app/build/
+android/build/
+android/*.iml
+android/app/*.iml
+android/local.properties
+
+# APK compiladas (se descargan desde GitHub Actions, no se suben al repo)
+*.apk
+*.aab
+
+# Keystore debug: NO se sube al repo (ver LEEME_APK.md).
+# Es solo de depuración, con las claves por defecto (android/android), y en
+# GitHub Actions se restaura desde el secreto GEOGRAFIA_DEBUG_KEYSTORE_B64.
+# Si se subiera a un repo público, cualquiera podría firmar una APK debug
+# con la misma clave y actualizar por encima de la app instalada.
+keystore/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.idea/
+*.log

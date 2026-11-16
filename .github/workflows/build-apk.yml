@@ -1,0 +1,81 @@
+# Geografía Preuniversitario — APK Android
+# Compila la APK debug en GitHub Actions cuando se pulsa "Run workflow" a mano.
+# La APK aparece en: Actions > (la ejecución) > Artifacts > geografia-preuniversitario-debug
+# Es una APK DEBUG (sin firmar para Play Store): sirve para instalarla
+# directamente en el teléfono y probar. No es una versión de tienda.
+#
+# IMPORTANTE: el trigger es SOLO manual (workflow_dispatch), a propósito.
+# El contenido web (www/) se actualiza a mano cada vez que cambia la app
+# (ver LEEME_APK.md), así que un build automático en cada push compilaría
+# una versión vieja. Cuando el www/ nuevo esté en main, se pulsa
+# "Run workflow" y se descarga la APK.
+name: Compilar APK Geografía
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    name: Compilar APK debug
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar Java 21 (JDK)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Instalar dependencias (Capacitor)
+        run: npm ci
+
+      # El keystore debug NO está en el repo (ver .gitignore y LEEME_APK.md):
+      # es solo de depuración, con las claves por defecto (android/android),
+      # y se restaura aquí desde el secreto GEOGRAFIA_DEBUG_KEYSTORE_B64
+      # (el archivo keystore/geografia-debug.keystore en base64, sin saltos).
+      # Sin él, la firma no sería fija y cada build saldría con otra clave.
+      - name: Restaurar keystore debug (secreto)
+        run: |
+          if [ -z "${{ secrets.GEOGRAFIA_DEBUG_KEYSTORE_B64 }}" ]; then
+            echo "ERROR: falta el secreto GEOGRAFIA_DEBUG_KEYSTORE_B64 en el repo (Settings > Secrets and variables > Actions)."
+            echo "Crea el secreto con el keystore local: base64 -w0 keystore/geografia-debug.keystore"
+            exit 1
+          fi
+          mkdir -p keystore
+          echo "${{ secrets.GEOGRAFIA_DEBUG_KEYSTORE_B64 }}" | base64 -d > keystore/geografia-debug.keystore
+
+      - name: Preparar Android (crea la plataforma si falta, copia icono/splash y fija el manifiesto)
+        run: node scripts/setup-android.js
+
+      - name: Sincronizar la web con Android
+        run: npx cap sync android
+
+      # IMPORTANTE: cap sync reescribe android/app/build.gradle, así que el
+      # arreglo de firma que aplica setup-android.js (antes del sync) se
+      # pierde. Hay que volver a aplicar fix-debug-signing.js DESPUÉS del
+      # sync, o cada build sale con una clave debug efímera distinta y Roi
+      # tiene que desinstalar la APK anterior para instalar la nueva.
+      - name: Fijar firma debug después del sync
+        run: node scripts/fix-debug-signing.js
+
+      - name: Compilar APK debug
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Guardar la APK como descarga
+        uses: actions/upload-artifact@v4
+        with:
+          name: geografia-preuniversitario-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
