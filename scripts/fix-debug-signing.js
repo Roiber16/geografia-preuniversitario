@@ -66,11 +66,11 @@ if (!/buildTypes\s*\{[^}]*\bdebug\s*\{/.test(gradle)) {
 
 // La versión también la fija este script: cap sync reescribe build.gradle
 // y con él versionCode/versionName, así que se reponen aquí en cada build.
-// v9 = ícono Atlas en TODAS las densidades (los foreground por densidad
-// seguían siendo el logo viejo de Capacitor y tapaban al Atlas).
+// v10 = pulido visual (sin destello blanco, sin flechas, tipografia y
+// transiciones) + icono Atlas en todas las densidades + splash Atlas.
 // Subir ambos números en cada entrega.
-gradle = gradle.replace(/versionCode \d+/, "versionCode 9");
-gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.8"');
+gradle = gradle.replace(/versionCode \d+/, "versionCode 10");
+gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.9"');
 
 fs.writeFileSync(gradlePath, gradle);
 console.log("build.gradle: firma debug fijada a keystore/geografia-debug.keystore");

@@ -1,20 +1,144 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <script src="./offline-progress.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
     <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
     <!-- Empty inline icon: stops the browser fetching /favicon.ico, which
          lives outside the space's routes and fails auth. -->
     <link rel="icon" href="data:," />
     <title>App de Geografía para preuniversitario</title>
+    <!-- Pintura inicial sin destello blanco: antes de que cargue el paquete
+         de la app, la página ya nace con el fondo y los colores del tema
+         guardado (los mismos valores que client/src/theme.css), y el área
+         raíz muestra una pantalla de carga tranquila que React sustituye
+         en cuanto la app está lista. El script lee la preferencia de tema
+         del propio teléfono (clave «geo-theme», la misma que usa la app)
+         para que ni siquiera el primer fotograma salga en otro tema. -->
+    <script>
+      try {
+        var t = localStorage.getItem("geo-theme");
+        if (t === "light" || t === "night" || t === "dark") {
+          document.documentElement.dataset.theme = t;
+        }
+      } catch (e) {}
+    </script>
+    <style>
+      :root {
+        --arranque-fondo: #f4f4f5;
+        --arranque-texto: #1f2328;
+        --arranque-tenue: #5c6167;
+        --arranque-acento: #3d556e;
+        --arranque-via: #dde3e9;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --arranque-fondo: #000000;
+          --arranque-texto: #e8e8e8;
+          --arranque-tenue: #a3a3a3;
+          --arranque-acento: #a9bfd4;
+          --arranque-via: #1d2733;
+        }
+      }
+      :root[data-theme="dark"] {
+        --arranque-fondo: #000000;
+        --arranque-texto: #e8e8e8;
+        --arranque-tenue: #a3a3a3;
+        --arranque-acento: #a9bfd4;
+        --arranque-via: #1d2733;
+      }
+      :root[data-theme="light"] {
+        --arranque-fondo: #f4f4f5;
+        --arranque-texto: #1f2328;
+        --arranque-tenue: #5c6167;
+        --arranque-acento: #3d556e;
+        --arranque-via: #dde3e9;
+      }
+      :root[data-theme="night"] {
+        --arranque-fondo: #1e1e1e;
+        --arranque-texto: #ececec;
+        --arranque-tenue: #a8a8a8;
+        --arranque-acento: #aec2d8;
+        --arranque-via: #2c3742;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--arranque-fondo);
+      }
+      .arranque {
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        background: var(--arranque-fondo);
+        color: var(--arranque-texto);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .arranque-nombre {
+        font-size: 30px;
+        line-height: 36px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .arranque-sub {
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--arranque-tenue);
+      }
+      .arranque-via {
+        width: 148px;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--arranque-via);
+        overflow: hidden;
+      }
+      .arranque-barra {
+        height: 100%;
+        width: 40%;
+        border-radius: 999px;
+        background: var(--arranque-acento);
+        animation: arranque-paso 1.1s ease-in-out infinite;
+      }
+      @keyframes arranque-paso {
+        0% {
+          transform: translateX(-110%);
+        }
+        100% {
+          transform: translateX(280%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .arranque-barra {
+          animation: none;
+          width: 100%;
+          opacity: 0.5;
+        }
+      }
+    </style>
     
-  <link rel="stylesheet" crossorigin href="./assets/index-x568y6ta.css"><script type="module" crossorigin src="./assets/index-vj711bf9.js"></script></head>
+  <link rel="stylesheet" crossorigin href="./assets/index-80zqwa5y.css"><script type="module" crossorigin src="./assets/index-j3etw4mj.js"></script></head>
   <body>
     <div
       data-generated-space-root=""
       data-generated-space-slug="app-de-geografia-para-preuniversitario"
-    ></div>
+    >
+      <div class="arranque" role="status" aria-label="Cargando GeoPre">
+        <div class="arranque-nombre">GeoPre</div>
+        <div class="arranque-via" aria-hidden="true">
+          <div class="arranque-barra"></div>
+        </div>
+        <div class="arranque-sub">Cargando tu geografía…</div>
+      </div>
+    </div>
   </body>
 </html>
