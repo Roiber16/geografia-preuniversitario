@@ -60,6 +60,9 @@ def main():
     fg = full.resize((432, 432), Image.LANCZOS).convert("RGBA")
     assert all(p[3] == 255 for p in list(fg.getdata())[::997]), "foreground con transparencia"
     sizes = {"mdpi": 48, "hdpi": 72, "xhdpi": 96, "xxhdpi": 144, "xxxhdpi": 192}
+    # Foreground adaptativo (108dp) por densidad: el sistema prefiere la
+    # densidad exacta a anydpi, asi que cada densidad lleva el Atlas.
+    fg_sizes = {"mdpi": 108, "hdpi": 162, "xhdpi": 216, "xxhdpi": 324, "xxxhdpi": 432}
     for dest_root in (ROOT / "assets" / "res", ROOT / "android" / "app" / "src" / "main" / "res"):
         for dpi, size in sizes.items():
             folder = dest_root / f"mipmap-{dpi}"
@@ -77,6 +80,8 @@ def main():
             out2 = Image.new("RGBA", sq.size, (0, 0, 0, 0))
             out2.paste(sq, (0, 0), mask2)
             out2.resize((size, size), Image.LANCZOS).save(folder / "ic_launcher_round.png")
+            # Foreground adaptativo por densidad (tapa al viejo de Capacitor).
+            full.resize((fg_sizes[dpi], fg_sizes[dpi]), Image.LANCZOS).convert("RGBA").save(folder / "ic_launcher_foreground.png")
         folder = dest_root / "mipmap-anydpi-v26"
         folder.mkdir(parents=True, exist_ok=True)
         fg.save(folder / "ic_launcher_foreground.png")
