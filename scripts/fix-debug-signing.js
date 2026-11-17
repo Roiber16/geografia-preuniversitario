@@ -66,10 +66,10 @@ if (!/buildTypes\s*\{[^}]*\bdebug\s*\{/.test(gradle)) {
 
 // La versión también la fija este script: cap sync reescribe build.gradle
 // y con él versionCode/versionName, así que se reponen aquí en cada build.
-// v3 = GeoPre con todo (fotos realistas, descargas, EcuRed, Clases,
-// juego de banderas y comparador). Subir ambos números en cada entrega.
-gradle = gradle.replace(/versionCode \d+/, "versionCode 3");
-gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.2"');
+// v4 = GeoPre completa con el mapa offline de Camagüey con GPS.
+// Subir ambos números en cada entrega.
+gradle = gradle.replace(/versionCode \d+/, "versionCode 4");
+gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.3"');
 
 fs.writeFileSync(gradlePath, gradle);
 console.log("build.gradle: firma debug fijada a keystore/geografia-debug.keystore");
