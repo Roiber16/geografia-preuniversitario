@@ -66,9 +66,37 @@ if (!/buildTypes\s*\{[^}]*\bdebug\s*\{/.test(gradle)) {
 
 // La versión también la fija este script: cap sync reescribe build.gradle
 // y con él versionCode/versionName, así que se reponen aquí en cada build.
-// v2 = GeoPre (menú + icono Atlas). Subir ambos números en cada entrega.
-gradle = gradle.replace(/versionCode \d+/, "versionCode 2");
-gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.1"');
+// v3 = GeoPre con todo (fotos realistas, descargas, EcuRed, Clases,
+// juego de banderas y comparador). Subir ambos números en cada entrega.
+gradle = gradle.replace(/versionCode \d+/, "versionCode 3");
+gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.2"');
 
 fs.writeFileSync(gradlePath, gradle);
 console.log("build.gradle: firma debug fijada a keystore/geografia-debug.keystore");
+
+// El nombre del launcher también lo fija este script: cap sync NO actualiza
+// android/app/src/main/res/values/strings.xml desde capacitor.config.json
+// (la v2 salió con la etiqueta vieja "Geografía Preuniversitario").
+// El nombre elegido por Roi es GeoPre.
+const stringsPath = path.join(
+  __dirname,
+  "..",
+  "android",
+  "app",
+  "src",
+  "main",
+  "res",
+  "values",
+  "strings.xml"
+);
+if (fs.existsSync(stringsPath)) {
+  let strings = fs.readFileSync(stringsPath, "utf8");
+  strings = strings.replace(
+    /(<string name="app_name">)[^<]*(<\/string>)/,
+    "$1GeoPre$2"
+  );
+  fs.writeFileSync(stringsPath, strings);
+  console.log("strings.xml: app_name fijado a GeoPre");
+} else {
+  console.error("AVISO: no existe strings.xml en " + stringsPath);
+}
