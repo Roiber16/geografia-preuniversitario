@@ -66,12 +66,10 @@ if (!/buildTypes\s*\{[^}]*\bdebug\s*\{/.test(gradle)) {
 
 // La versión también la fija este script: cap sync reescribe build.gradle
 // y con él versionCode/versionName, así que se reponen aquí en cada build.
-// v6 = arreglos de la prueba en el Redmi: créditos fuera de las tarjetas,
-// mapas mudos con relleno claro, botón Atrás sin flecha, mapamundi del inicio
-// ampliado y nombre del launcher corregido (title_activity_main).
+// v7 = ícono Atlas regenerado full-bleed (foreground opaco, libro ampliado).
 // Subir ambos números en cada entrega.
-gradle = gradle.replace(/versionCode \d+/, "versionCode 6");
-gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.5"');
+gradle = gradle.replace(/versionCode \d+/, "versionCode 7");
+gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.6"');
 
 fs.writeFileSync(gradlePath, gradle);
 console.log("build.gradle: firma debug fijada a keystore/geografia-debug.keystore");
