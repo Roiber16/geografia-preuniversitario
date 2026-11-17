@@ -66,10 +66,12 @@ if (!/buildTypes\s*\{[^}]*\bdebug\s*\{/.test(gradle)) {
 
 // La versión también la fija este script: cap sync reescribe build.gradle
 // y con él versionCode/versionName, así que se reponen aquí en cada build.
-// v5 = permiso de ubicación una sola vez en el mapa offline.
+// v6 = arreglos de la prueba en el Redmi: créditos fuera de las tarjetas,
+// mapas mudos con relleno claro, botón Atrás sin flecha, mapamundi del inicio
+// ampliado y nombre del launcher corregido (title_activity_main).
 // Subir ambos números en cada entrega.
-gradle = gradle.replace(/versionCode \d+/, "versionCode 5");
-gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.4"');
+gradle = gradle.replace(/versionCode \d+/, "versionCode 6");
+gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.5"');
 
 fs.writeFileSync(gradlePath, gradle);
 console.log("build.gradle: firma debug fijada a keystore/geografia-debug.keystore");
@@ -97,6 +99,17 @@ if (fs.existsSync(stringsPath)) {
   );
   fs.writeFileSync(stringsPath, strings);
   console.log("strings.xml: app_name fijado a GeoPre");
+  // El nombre del launcher lo manda OTRO string: la actividad principal usa
+  // android:label="@string/title_activity_main", no app_name. Si no se fija
+  // también, el launcher sigue mostrando el nombre viejo aunque app_name sea
+  // GeoPre (eso pasó en la v5: application-label GeoPre pero la actividad
+  // decía "Geografía Preuniversitario").
+  strings = strings.replace(
+    /(<string name="title_activity_main">)[^<]*(<\/string>)/,
+    "$1GeoPre$2"
+  );
+  fs.writeFileSync(stringsPath, strings);
+  console.log("strings.xml: title_activity_main fijado a GeoPre");
 } else {
   console.error("AVISO: no existe strings.xml en " + stringsPath);
 }
