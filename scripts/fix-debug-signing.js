@@ -66,11 +66,12 @@ if (!/buildTypes\s*\{[^}]*\bdebug\s*\{/.test(gradle)) {
 
 // La versión también la fija este script: cap sync reescribe build.gradle
 // y con él versionCode/versionName, así que se reponen aquí en cada build.
-// v11 = códigos otra vez sin conexión (revertida la comprobación en
-// servidor) + todo el pulido de la v10 (sin destello, sin flechas).
+// v12 = icono SIN adaptativo (solo el PNG del libro, que es el que se ve
+// bien) + nuevo nombre interno cu.roi.geopre: el telefono ya no tiene
+// ningun icono viejo de este paquete que recordar.
 // Subir ambos números en cada entrega.
-gradle = gradle.replace(/versionCode \d+/, "versionCode 11");
-gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.10"');
+gradle = gradle.replace(/versionCode \d+/, "versionCode 12");
+gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.11"');
 
 fs.writeFileSync(gradlePath, gradle);
 console.log("build.gradle: firma debug fijada a keystore/geografia-debug.keystore");

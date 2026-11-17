@@ -5,7 +5,7 @@ Empaquetado con Capacitor de la app web de Geografía para preuniversitario
 offline: el contenido y los ejercicios van dentro de la APK y el progreso
 se guarda en localStorage del teléfono.
 
-- **appId:** `cu.roi.geografia`
+- **appId:** `cu.roi.geopre`
 - **Nombre:** Geografía Preuniversitario
 - **Versión:** 1.0.0 (versionCode 1, versionName 1.0)
 - **Límite de peso:** menos de 50 MB (la parte web pesa ~360 KB, sin

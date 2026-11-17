@@ -1,4 +1,4 @@
-package cu.roi.geografia;
+package cu.roi.geopre;
 
 import com.getcapacitor.BridgeActivity;
 
