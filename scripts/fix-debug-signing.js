@@ -69,9 +69,11 @@ if (!/buildTypes\s*\{[^}]*\bdebug\s*\{/.test(gradle)) {
 // v12 = icono SIN adaptativo (solo el PNG del libro, que es el que se ve
 // bien) + nuevo nombre interno cu.roi.geopre: el telefono ya no tiene
 // ningun icono viejo de este paquete que recordar.
+// v13 = icono globo terraqueo (v3, dibujado por codigo) + strings.xml con
+// el paquete nuevo cu.roi.geopre en package_name/custom_url_scheme.
 // Subir ambos números en cada entrega.
-gradle = gradle.replace(/versionCode \d+/, "versionCode 12");
-gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.11"');
+gradle = gradle.replace(/versionCode \d+/, "versionCode 13");
+gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.12"');
 
 fs.writeFileSync(gradlePath, gradle);
 console.log("build.gradle: firma debug fijada a keystore/geografia-debug.keystore");
@@ -110,6 +112,20 @@ if (fs.existsSync(stringsPath)) {
   );
   fs.writeFileSync(stringsPath, strings);
   console.log("strings.xml: title_activity_main fijado a GeoPre");
+  // El paquete interno también quedó viejo en la v12: cap sync NO actualiza
+  // package_name ni custom_url_scheme, que seguían en cu.roi.geografia.
+  // Solo afectan a enlaces profundos (la app no los usa), pero se corrigen
+  // aquí para que todo el paquete sea cu.roi.geopre.
+  strings = strings.replace(
+    /(<string name="package_name">)[^<]*(<\/string>)/,
+    "$1cu.roi.geopre$2"
+  );
+  strings = strings.replace(
+    /(<string name="custom_url_scheme">)[^<]*(<\/string>)/,
+    "$1cu.roi.geopre$2"
+  );
+  fs.writeFileSync(stringsPath, strings);
+  console.log("strings.xml: package_name y custom_url_scheme fijados a cu.roi.geopre");
 } else {
   console.error("AVISO: no existe strings.xml en " + stringsPath);
 }
