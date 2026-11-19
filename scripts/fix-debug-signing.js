@@ -71,9 +71,13 @@ if (!/buildTypes\s*\{[^}]*\bdebug\s*\{/.test(gradle)) {
 // ningun icono viejo de este paquete que recordar.
 // v13 = icono globo terraqueo (v3, dibujado por codigo) + strings.xml con
 // el paquete nuevo cu.roi.geopre en package_name/custom_url_scheme.
+// v14 = mapas revisados (paleta atlas, CAMAGÜEY una sola vez, etiquetas
+// del globo sin cortar), scroll siempre arriba, atrás doble para salir en
+// ventanas principales, Clases por dosificación con plan de clase y botón
+// Copiar la clase.
 // Subir ambos números en cada entrega.
-gradle = gradle.replace(/versionCode \d+/, "versionCode 13");
-gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.12"');
+gradle = gradle.replace(/versionCode \d+/, "versionCode 14");
+gradle = gradle.replace(/versionName "[^"]*"/, 'versionName "1.0.13"');
 
 fs.writeFileSync(gradlePath, gradle);
 console.log("build.gradle: firma debug fijada a keystore/geografia-debug.keystore");
